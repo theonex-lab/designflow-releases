@@ -33,7 +33,9 @@ try {
         $temp = New-Item -ItemType Directory -Path (Join-Path ([IO.Path]::GetTempPath()) ('designflow-build-' + [guid]::NewGuid()))
         $exe = Join-Path $temp.FullName 'DesignFlow.exe'
         try {
-            $objcopy = Join-Path (rustc --print sysroot) 'lib/rustlib/x86_64-pc-windows-gnu/bin/rust-objcopy.exe'
+            $tools = Join-Path (rustc --print sysroot) 'lib/rustlib/x86_64-pc-windows-gnu/bin'
+            $objcopy = @('rust-objcopy.exe', 'llvm-objcopy.exe') | ForEach-Object { Join-Path $tools $_ } | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+            if (!$objcopy) { throw 'Instale o componente llvm-tools-preview do Rust.' }
             & $objcopy --strip-debug --subsystem windows target/debug/designflow.exe $exe
             if ($LASTEXITCODE -ne 0) { throw 'Falha ao preparar o executável da atualização.' }
             & "$PSScriptRoot/sign-update.ps1" -Version $version -Executable $exe -PrivateKey $private -OutputDirectory $output

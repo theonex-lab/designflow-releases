@@ -1244,7 +1244,7 @@ dependencies = [
 
 [[package]]
 name = "designflow"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "arboard",
  "craft-menu",
@@ -1279,7 +1279,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-collab"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "base64 0.22.1",
  "chrono",
@@ -1297,7 +1297,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-collab-net"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "base64 0.22.1",
  "designflow-collab",
@@ -1320,7 +1320,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-color"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "kurbo",
  "serde",
@@ -1329,7 +1329,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-doc"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "designflow-color",
  "designflow-geom",
@@ -1342,7 +1342,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-engine"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "base64 0.22.1",
  "craft-docpath",
@@ -1376,7 +1376,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-format"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "designflow-doc",
  "designflow-layout",
@@ -1393,7 +1393,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-geom"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "kurbo",
  "serde",
@@ -1401,7 +1401,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-layout"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "designflow-doc",
  "designflow-geom",
@@ -1409,7 +1409,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-mcp"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "base64 0.22.1",
  "designflow-collab-net",
@@ -1425,7 +1425,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-pathops"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "designflow-doc",
  "designflow-geom",
@@ -1434,7 +1434,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-pdf"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "designflow-color",
  "designflow-doc",
@@ -1451,7 +1451,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-plugin"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "designflow-color",
  "serde",
@@ -1464,7 +1464,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-render"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "crc32fast",
  "designflow-color",
@@ -1483,7 +1483,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-svg"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "base64 0.22.1",
  "designflow-color",
@@ -1499,7 +1499,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-text"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "core-text",
  "craft-font-catalog",
@@ -1517,7 +1517,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-ui-egui"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "base64 0.22.1",
  "chrono",
@@ -1547,7 +1547,7 @@ dependencies = [
 
 [[package]]
 name = "designflow-vectordrawable"
-version = "0.13.3"
+version = "0.13.4"
 dependencies = [
  "designflow-color",
  "designflow-doc",

@@ -4,75 +4,64 @@ on:
   push:
     tags:
       - "v*.*.*"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: designflow-release
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: windows-latest
-
+    defaults:
+      run:
+        shell: pwsh
     steps:
-      - name: Baixar o código
-        uses: actions/checkout@v4
-
-      - name: Instalar Rust
-        uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@v4
+      - name: Conferir versão e tag
+        run: |
+          $line = Select-String -LiteralPath Cargo.toml -Pattern '^version = "([0-9]+\.[0-9]+\.[0-9]+)"$' | Select-Object -First 1
+          if (!$line) { throw "Versão inválida no Cargo.toml." }
+          $version = $line.Matches[0].Groups[1].Value
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -cne "v$version") { throw "Tag e versão diferentes." }
+          "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc
+          path-type: minimal
+      - name: Disponibilizar ferramentas Windows
+        run: |
+          "$env:RUNNER_TEMP\msys64\mingw64\bin" >> $env:GITHUB_PATH
+      - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable-x86_64-pc-windows-gnu
-
-      - name: Preparar chave de assinatura
-        shell: pwsh
+          components: llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
+      - name: Preparar assinatura
         env:
           DESIGNFLOW_UPDATE_PRIVATE_KEY: ${{ secrets.DESIGNFLOW_UPDATE_PRIVATE_KEY }}
         run: |
-          $keyDir = Join-Path $env:LOCALAPPDATA "DesignFlowSigning"
+          if ([string]::IsNullOrWhiteSpace($env:DESIGNFLOW_UPDATE_PRIVATE_KEY)) { throw "Secret de assinatura ausente." }
+          $keyDir = Join-Path $env:LOCALAPPDATA DesignFlowSigning
           New-Item -ItemType Directory -Force $keyDir | Out-Null
-
-          $privateKey = Join-Path $keyDir "update-private.pem"
-          $publicKey = Join-Path $keyDir "update-public.der"
-
-          Set-Content `
-            -LiteralPath $privateKey `
-            -Value $env:DESIGNFLOW_UPDATE_PRIVATE_KEY `
-            -Encoding ascii
-
-          $rsa = [Security.Cryptography.RSA]::Create()
-          try {
-            $rsa.ImportFromPem([IO.File]::ReadAllText($privateKey))
-            [IO.File]::WriteAllBytes(
-              $publicKey,
-              $rsa.ExportRSAPublicKey()
-            )
-          }
-          finally {
-            $rsa.Dispose()
-          }
-
-          "DESIGNFLOW_UPDATE_PUBLIC_KEY=$publicKey" >> $env:GITHUB_ENV
-
+          [IO.File]::WriteAllText((Join-Path $keyDir update-private.pem), $env:DESIGNFLOW_UPDATE_PRIVATE_KEY)
+          Copy-Item assets/designflow/update-public.der (Join-Path $keyDir update-public.der)
       - name: Compilar e assinar
-        shell: pwsh
-        run: |
-          ./scripts/build-signed-release.ps1
-
-      - name: Criar release no GitHub
-        shell: pwsh
+        run: ./scripts/build-signed-release.ps1
+      - name: Publicar versão completa
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $version = (Select-String `
-            -LiteralPath "Cargo.toml" `
-            -Pattern '^version = "([0-9]+\.[0-9]+\.[0-9]+)"$' `
-            | Select-Object -First 1).Matches[0].Groups[1].Value
-
+          $version = $env:RELEASE_VERSION
           $folder = "target/distribution/release-$version"
-          $tag = "v$version"
-
-          gh release create $tag `
-            "$folder/designflow-$version-windows-x64.exe" `
-            "$folder/designflow-update-windows-x64.json" `
-            "$folder/designflow-update-windows-x64.sig" `
-            --title "DesignFlow $version" `
-            --notes "Atualização automática do DesignFlow." `
-            --latest
+          gh release create "v$version" "$folder/designflow-$version-windows-x64.exe" "$folder/designflow-update-windows-x64.json" "$folder/designflow-update-windows-x64.sig" --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title "DesignFlow $version" --notes "Atualização do DesignFlow." --latest
+          if ($LASTEXITCODE -ne 0) { throw "Falha ao publicar a release." }
+      - name: Remover chave do ambiente de compilação
+        if: always()
+        run: |
+          $key = Join-Path $env:LOCALAPPDATA DesignFlowSigning/update-private.pem
+          if (Test-Path -LiteralPath $key) { Remove-Item -LiteralPath $key }

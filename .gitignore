@@ -5,3 +5,4 @@ build/
 .env
 *.pem
 *.der
+!assets/designflow/update-public.der
