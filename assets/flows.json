@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "2.0",
+  "events": [
+    {
+      "id": "create-blank",
+      "from": [
+        "/",
+        "/projetos"
+      ],
+      "trigger": "Novo projeto/Em branco",
+      "preconditions": [
+        "user-authenticated"
+      ],
+      "pending": "creating",
+      "success": "/editor/{createdProject.id}",
+      "error": "Preserve previous screen and show retry"
+    },
+    {
+      "id": "preview-template",
+      "from": [
+        "/modelos"
+      ],
+      "trigger": "Click template",
+      "pending": "opening-preview",
+      "success": "preview-dialog",
+      "error": "Show template unavailable"
+    },
+    {
+      "id": "create-template",
+      "from": [
+        "preview-dialog"
+      ],
+      "trigger": "Usar modelo",
+      "pending": "creating",
+      "success": "/editor/{createdProject.id}",
+      "error": "Keep preview and show retry"
+    },
+    {
+      "id": "select-file",
+      "from": [
+        "/importar"
+      ],
+      "trigger": "drop-or-file-picker",
+      "preconditions": [
+        "file matches server capabilities"
+      ],
+      "pending": "uploading",
+      "success": "update-recent-imports",
+      "error": "Keep file context; show validation/server error"
+    },
+    {
+      "id": "toggle-favorite",
+      "from": [
+        "/projetos",
+        "/biblioteca"
+      ],
+      "trigger": "Favorite button",
+      "pending": "saving",
+      "success": "update-favorite",
+      "error": "rollback and toast"
+    },
+    {
+      "id": "trash-project",
+      "from": [
+        "/projetos"
+      ],
+      "trigger": "Delete from contextual menu",
+      "pending": "confirming-then-deleting",
+      "success": "move-to-trash",
+      "error": "keep card and show error"
+    },
+    {
+      "id": "restore-selection",
+      "from": [
+        "/lixeira"
+      ],
+      "trigger": "Restaurar selecionados",
+      "preconditions": [
+        "selectedIds.length > 0"
+      ],
+      "pending": "restoring",
+      "success": "remove restored from trash",
+      "error": "show partial failures"
+    },
+    {
+      "id": "empty-trash",
+      "from": [
+        "/lixeira"
+      ],
+      "trigger": "Esvaziar lixeira",
+      "pending": "confirming-then-deleting",
+      "success": "empty list",
+      "error": "keep list and show error"
+    },
+    {
+      "id": "save-settings",
+      "from": [
+        "/configuracoes"
+      ],
+      "trigger": "Salvar alterações",
+      "preconditions": [
+        "dirty and valid"
+      ],
+      "pending": "saving",
+      "success": "saved-indicator",
+      "error": "keep dirty changes + retry"
+    },
+    {
+      "id": "edit-layer",
+      "from": [
+        "/editor/:projectId"
+      ],
+      "trigger": "Change selected properties",
+      "preconditions": [
+        "project loaded and can edit"
+      ],
+      "pending": "local-change-then-saving",
+      "success": "saved-status",
+      "error": "unsaved-status + retry"
+    }
+  ]
+}

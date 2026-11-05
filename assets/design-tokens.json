@@ -1,0 +1,81 @@
+{
+  "name": "DesignFlow",
+  "version": "1.0",
+  "theme": "light",
+  "color": {
+    "primary": "#6B17F5",
+    "primaryHover": "#5810D4",
+    "primarySubtle": "#EEE7FF",
+    "text": "#151322",
+    "muted": "#62657B",
+    "surface": "#FFFFFF",
+    "canvas": "#FBFAFF",
+    "border": "#E8E4F2",
+    "success": "#15806D",
+    "danger": "#C93A58",
+    "focusRing": "#A788FF"
+  },
+  "typography": {
+    "family": "Inter, system-ui, Arial, sans-serif",
+    "pageTitle": {
+      "fontSize": 34,
+      "lineHeight": 1.15,
+      "weight": 700
+    },
+    "sectionTitle": {
+      "fontSize": 20,
+      "weight": 600
+    },
+    "body": {
+      "fontSize": 15,
+      "lineHeight": 1.5,
+      "weight": 400
+    },
+    "caption": {
+      "fontSize": 13,
+      "lineHeight": 1.45,
+      "weight": 400
+    }
+  },
+  "spacePx": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    32,
+    40,
+    48,
+    64
+  ],
+  "radiusPx": {
+    "small": 8,
+    "medium": 12,
+    "large": 16,
+    "pill": 999
+  },
+  "layoutPx": {
+    "sidebar": 264,
+    "topbar": 88,
+    "contentPaddingDesktop": 40,
+    "contentMaxWidth": 1480,
+    "gridGap": 22,
+    "cardPadding": 22
+  },
+  "icon": {
+    "set": "lucide-react",
+    "defaultSize": 20,
+    "strokeWidth": 1.8
+  },
+  "breakpointsPx": {
+    "compact": 720,
+    "tablet": 1024,
+    "desktop": 1440
+  },
+  "motion": {
+    "fastMs": 120,
+    "normalMs": 180,
+    "preferReducedMotion": true
+  }
+}
