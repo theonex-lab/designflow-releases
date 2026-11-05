@@ -1,0 +1,19 @@
+/* GENERATED from assets/design-tokens.json — do not edit directly. */
+:root {
+  --df-primary: #6B17F5;
+  --df-primary-hover: #5810D4;
+  --df-primary-subtle: #EEE7FF;
+  --df-text: #151322;
+  --df-muted: #62657B;
+  --df-surface: #FFFFFF;
+  --df-bg: #FBFAFF;
+  --df-border: #E8E4F2;
+  --df-danger: #C93A58;
+  --df-success: #15806D;
+  --df-focus: #A788FF;
+  --df-sidebar: 264px;
+  --df-topbar: 88px;
+  --df-radius-sm: 8px;
+  --df-radius-md: 12px;
+  --df-radius-lg: 16px;
+}

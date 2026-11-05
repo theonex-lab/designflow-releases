@@ -1,0 +1,27 @@
+.df-filter-chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.df-filter-chip{min-height:44px;border-radius:12px;border:1px solid var(--df-border);background:var(--df-surface);color:var(--df-text);padding:10px 16px;font-size:14px;cursor:pointer}
+.df-filter-chip[aria-pressed="true"]{background:var(--df-primary-subtle);color:var(--df-primary);border-color:transparent;font-weight:600}
+.df-status-view{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:240px;padding:28px;text-align:center;color:var(--df-muted)}
+.df-status-view p{margin:0;max-width:420px}
+.df-spinner{animation:df-rotate 1.25s linear infinite}
+@keyframes df-rotate{to{transform:rotate(360deg)}}
+.df-form-field{display:grid;gap:7px;min-width:0}
+.df-form-field label{font-size:14px;font-weight:600;color:var(--df-text)}
+.df-form-control{width:100%;min-height:44px;border-radius:12px;padding:10px 12px;border:1px solid var(--df-border);background:var(--df-surface);color:var(--df-text)}
+.df-field-error{font-size:13px;color:var(--df-danger);margin:4px 0}
+.df-field-hint{font-size:13px;color:var(--df-muted);margin:4px 0}
+.df-confirm-overlay{position:fixed;inset:0;z-index:1100;background:#15102288;display:flex;align-items:center;justify-content:center;padding:16px}
+.df-confirm-dialog{width:min(100%,480px);max-height:calc(100dvh - 32px);overflow-y:auto;background:var(--df-surface);border-radius:16px;box-shadow:0 20px 52px #18112523;padding:24px}
+.df-confirm-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.df-confirm-title-row h2{font-size:21px;margin:0;line-height:1.3}
+.df-confirm-dialog>p{margin:12px 0 24px;color:var(--df-muted);line-height:1.55}
+.df-confirm-actions{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.df-button[data-variant="danger"]{background:var(--df-danger);color:white}
+.df-button[data-variant="danger"]:hover:not(:disabled){filter:brightness(.9)}
+.df-dropzone{min-height:300px;border:1px dashed #C9B8FA;border-radius:16px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:36px;text-align:center;background:rgba(255,255,255,.5);color:var(--df-primary)}
+.df-dropzone[data-dragging="true"]{border-color:var(--df-primary);background:var(--df-primary-subtle)}
+.df-dropzone h2{font-size:21px;color:var(--df-text);margin:18px 0 3px}
+.df-dropzone p{color:var(--df-muted);margin:0 0 24px}
+.df-dropzone small{color:var(--df-muted);display:block;margin-top:16px}
+@media(max-width:720px){.df-filter-chips{flex-wrap:nowrap;overflow-x:auto;max-width:100%}.df-filter-chip{white-space:nowrap}.df-confirm-actions>.df-button{flex:1}}
+@media(prefers-reduced-motion:reduce){.df-spinner{animation:none}}
