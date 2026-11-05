@@ -130,9 +130,8 @@ fn sign_in(auth: &mut Auth, root: &mut Ui) -> Option<&'static str> {
     egui::CentralPanel::default().frame(egui::Frame::NONE.fill(Color32::WHITE)).show(root, |ui| {
         ui.style_mut().visuals = egui::Visuals::light();
         let screen = ui.max_rect();
-        // At Full HD the form is about 430 points wide, with 45-point fields.
-        // Anchor the visible content, rather than the old reference canvas, at the center.
-        let s = (screen.width() / 700.0).min(screen.height() / 850.0).min(0.76);
+        // Preserve the approved full-size form at Full HD and fit smaller windows.
+        let s = (screen.width() / 700.0).min(screen.height() / 1020.0).min(1.0);
         let center = screen.center().x;
         let content_midpoint = if signup { 521.5 } else { 608.0 };
         let top = screen.center().y - content_midpoint * s;
@@ -145,8 +144,8 @@ fn sign_in(auth: &mut Auth, root: &mut Ui) -> Option<&'static str> {
         };
         asset(ui, Rect::from_min_size(screen.min + vec2(42.0, 30.0) * s, vec2(281.0, 49.0) * s),
             "signin-logo", include_bytes!("../../../../assets/designflow/signin-logo.png"));
-        paint(ui, area(656.5, 225.0, 677.0, 74.0), if signup { "Crie sua conta" } else { "Bem-vindo de volta" }, 56.0, Color32::BLACK, true);
-        paint(ui, area(787.0, 317.0, 416.0, 34.0), if signup { "Comece a criar no DesignFlow" } else { "Faça login para continuar criando" }, 22.0, Color32::from_gray(105), false);
+        paint(ui, area(656.5, 207.0, 677.0, 84.0), if signup { "Crie sua conta" } else { "Bem-vindo de volta" }, 72.0, Color32::BLACK, true);
+        paint(ui, area(787.0, 317.0, 416.0, 34.0), if signup { "Comece a criar no DesignFlow" } else { "Faça login para continuar criando" }, 28.0, Color32::from_gray(188), false);
         paint(ui, area(710.0, 370.0, 46.0, 22.0), "Email", 15.0, Color32::BLACK, false);
         paint(ui, area(712.0, 464.0, 50.0, 22.0), "Senha", 15.0, Color32::BLACK, false);
         let enter = input(ui, area(713.0, 395.0, 563.0, 59.0), "Insira seu email", &mut auth.email, None, FieldIcon::Mail, s)
