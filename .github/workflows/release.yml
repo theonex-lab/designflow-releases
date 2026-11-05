@@ -1,0 +1,78 @@
+name: Publicar atualização do DesignFlow
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Instalar Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable-x86_64-pc-windows-gnu
+
+      - name: Preparar chave de assinatura
+        shell: pwsh
+        env:
+          DESIGNFLOW_UPDATE_PRIVATE_KEY: ${{ secrets.DESIGNFLOW_UPDATE_PRIVATE_KEY }}
+        run: |
+          $keyDir = Join-Path $env:LOCALAPPDATA "DesignFlowSigning"
+          New-Item -ItemType Directory -Force $keyDir | Out-Null
+
+          $privateKey = Join-Path $keyDir "update-private.pem"
+          $publicKey = Join-Path $keyDir "update-public.der"
+
+          Set-Content `
+            -LiteralPath $privateKey `
+            -Value $env:DESIGNFLOW_UPDATE_PRIVATE_KEY `
+            -Encoding ascii
+
+          $rsa = [Security.Cryptography.RSA]::Create()
+          try {
+            $rsa.ImportFromPem([IO.File]::ReadAllText($privateKey))
+            [IO.File]::WriteAllBytes(
+              $publicKey,
+              $rsa.ExportRSAPublicKey()
+            )
+          }
+          finally {
+            $rsa.Dispose()
+          }
+
+          "DESIGNFLOW_UPDATE_PUBLIC_KEY=$publicKey" >> $env:GITHUB_ENV
+
+      - name: Compilar e assinar
+        shell: pwsh
+        run: |
+          ./scripts/build-signed-release.ps1
+
+      - name: Criar release no GitHub
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = (Select-String `
+            -LiteralPath "Cargo.toml" `
+            -Pattern '^version = "([0-9]+\.[0-9]+\.[0-9]+)"$' `
+            | Select-Object -First 1).Matches[0].Groups[1].Value
+
+          $folder = "target/distribution/release-$version"
+          $tag = "v$version"
+
+          gh release create $tag `
+            "$folder/designflow-$version-windows-x64.exe" `
+            "$folder/designflow-update-windows-x64.json" `
+            "$folder/designflow-update-windows-x64.sig" `
+            --title "DesignFlow $version" `
+            --notes "Atualização automática do DesignFlow." `
+            --latest
