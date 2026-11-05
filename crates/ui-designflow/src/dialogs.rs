@@ -209,6 +209,23 @@ pub fn keys(app: &mut FigApp, ctx: &Context) {
 /// branch, export preview, colour profile, plugin, live join/publish, online dialogs and
 /// close confirmation.
 pub fn show(app: &mut FigApp, ctx: &Context) {
+    if let Some(mut threshold) = app.ui.vectorize_threshold {
+        let mut open = true;
+        let mut submit = false;
+        egui::Window::new("Vetorizar em preto e branco").open(&mut open).collapsible(false).resizable(false).show(ctx, |ui| {
+            ui.set_max_width(350.0);
+            ui.label("Converte a imagem original inteira em contornos pretos editáveis. O vetor será criado ao lado da imagem.");
+            ui.add_space(12.0);
+            ui.add(egui::Slider::new(&mut threshold, 0..=255).text("Limiar"));
+            ui.label("Valores maiores incluem tons mais claros. Áreas transparentes ficam vazias. Detalhes são limitados a 512 px.");
+            submit = ui.button("Criar vetor").clicked();
+        });
+        app.ui.vectorize_threshold = open.then_some(threshold);
+        if submit {
+            app.run("image.vectorize", json!({"threshold": threshold}));
+            app.ui.vectorize_threshold = None;
+        }
+    }
     // Dropped files waiting to open: their card, then (once it has shown) the files.
     crate::pending_open::pending_opens(app, ctx);
     crate::import_report::show(app, ctx);

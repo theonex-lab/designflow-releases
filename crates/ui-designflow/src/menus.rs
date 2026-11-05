@@ -76,6 +76,7 @@ pub fn invoke(app: &mut FigApp, id: &str) {
         return;
     }
     match id {
+        "image.vectorize" => app.ui.vectorize_threshold = Some(128),
         // Edit ▸ Delete (and the Delete binding) with an interaction open in the Prototype tab
         // removes that interaction, not the layer (#767).
         "edit.delete" if app.ui_context.clone().is_some_and(|ctx| crate::proto_panel::delete_selected_interaction(app, &ctx)) => {}
@@ -574,6 +575,7 @@ pub fn popups(app: &mut FigApp, ctx: &egui::Context) {
                 }
                 if crop && let Some(at) = entries.iter().position(|e| e.1 == "object.mask") {
                     entries.insert(at + 1, (tr("Crop image"), "image.crop"));
+                    entries.insert(at + 2, ("Vetorizar em preto e branco…", "image.vectorize"));
                 }
                 // An instance's actions reach its main component: replace "Create component" with
                 // "Go to main component" (as in Figma's context menu).

@@ -399,6 +399,7 @@ impl UiState {
 
 /// UI-only state (serialisable for `ui.inspect`).
 pub struct UiState {
+    pub vectorize_threshold: Option<u8>,
     /// The widths asked for the side panels (a drag of their edge; [`fit_panels`] gives what a
     /// small window draws).
     pub left_width: f32,
@@ -638,6 +639,7 @@ impl Default for UiState {
             actions_rect: None,
             variables: None,
             about: false,
+            vectorize_threshold: None,
             about_tab: dialogs::AboutTab::About,
             preferences: false,
             menu_input: None,

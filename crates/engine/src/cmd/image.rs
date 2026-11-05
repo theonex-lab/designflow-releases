@@ -10,6 +10,7 @@ use crate::{EngineError, Result, Session, bad, spec};
 
 pub fn specs() -> Vec<CommandSpec> {
     vec![
+        spec!("image.vectorize", "Vetorizar imagem", "{ids? (uma imagem), threshold? (0..255, padrão 128), invert?} → {id}: cria um vetor preto ao lado da imagem original, sem alterar a origem", true, vectorize),
         spec!(
             "image.adjust",
             "Adjust image",
@@ -54,6 +55,9 @@ pub fn specs() -> Vec<CommandSpec> {
         }),
     ]
 }
+
+mod tracing;
+use tracing::vectorize;
 
 /// The longest name a saved preset may have.
 const MAX_NAME: usize = 100;
